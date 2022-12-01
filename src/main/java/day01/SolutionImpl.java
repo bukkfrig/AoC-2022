@@ -12,18 +12,19 @@ import java.util.List;
 public final class SolutionImpl implements day01.Solution {
     @Override
     public Object solvePart1(InputStream input) throws Exception {
-        return parseElves(input).stream() // .
-                .max(Comparator.comparing(Elf::caloriesInFoodstuffs)) //
-                .get() //
-                .caloriesInFoodstuffs();
+        Elf top = parseElves(input).stream() // .
+                .max(Comparator.comparing(SolutionImpl::caloriesInFoodstuffs)) //
+                .get();
+
+        return caloriesInFoodstuffs(top);
     }
 
     @Override
     public Object solvePart2(InputStream input) throws Exception {
         return parseElves(input).stream() //
-                .sorted(Comparator.comparing(Elf::caloriesInFoodstuffs).reversed()) //
+                .sorted(Comparator.comparing(SolutionImpl::caloriesInFoodstuffs).reversed()) //
                 .limit(3) //
-                .mapToInt(Elf::caloriesInFoodstuffs) //
+                .mapToInt(SolutionImpl::caloriesInFoodstuffs) //
                 .sum();
     }
 
@@ -48,5 +49,11 @@ public final class SolutionImpl implements day01.Solution {
             foodstuffs.add(new Foodstuff(Integer.valueOf(line)));
         }
         return new Elf(foodstuffs);
+    }
+
+    static int caloriesInFoodstuffs(Elf elf) {
+        return elf.foodstuffs.stream() //
+                .mapToInt(foodstuff -> foodstuff.calories) //
+                .sum();
     }
 }

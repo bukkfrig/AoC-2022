@@ -8,10 +8,4 @@ class Elf {
     Elf(List<Foodstuff> foodstuffs) {
         this.foodstuffs = foodstuffs;
     }
-
-    int caloriesInFoodstuffs() {
-        return foodstuffs.stream() //
-                .mapToInt(foodstuff -> foodstuff.calories) //
-                .sum();
-    }
 }
