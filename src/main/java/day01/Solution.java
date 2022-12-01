@@ -83,7 +83,25 @@ public interface Solution {
     Object solvePart1(InputStream input) throws Exception;
 
     /**
-     * TODO: What will the puzzle be?
+     * By the time you calculate the answer to the Elves' question, they've already
+     * realized that the Elf carrying the most Calories of food might eventually <strong>run
+     * out of snacks</strong>.
+     * 
+     * <p>
+     * To avoid this unacceptable situation, the Elves would instead like to know
+     * the total Calories carried by the <strong>top three</strong> Elves carrying the most Calories.
+     * That way, even if one of those Elves runs out of snacks, they still have two
+     * backups.
+     * 
+     * <p>
+     * In the example above, the top three Elves are the fourth Elf (with 24000
+     * Calories), then the third Elf (with 11000 Calories), then the fifth Elf (with
+     * 10000 Calories). The sum of the Calories carried by these three elves is
+     * 45000.
+     * 
+     * <p>
+     * Find the top three Elves carrying the most Calories. <strong>How many Calories are
+     * those Elves carrying in total?</strong>
      */
     Object solvePart2(InputStream input) throws Exception;
 }

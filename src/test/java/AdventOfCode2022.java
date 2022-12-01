@@ -8,7 +8,7 @@ import org.junit.Test;
 public class AdventOfCode2022 {
     @Test
     public void day_01_part_1_example_1() throws Exception {
-        try (InputStream input = AdventOfCode2022.class.getResourceAsStream("day01-part1-example1.txt")) {
+        try (InputStream input = AdventOfCode2022.class.getResourceAsStream("day01-example1.txt")) {
             day01.Solution solution = new day01.SolutionImpl();
             assertEquals(24000, solution.solvePart1(input));
         }
@@ -22,10 +22,19 @@ public class AdventOfCode2022 {
         }
     }
 
+    @Test
+    public void day_01_part_2_example_1() throws Exception {
+        try (InputStream input = AdventOfCode2022.class.getResourceAsStream("day01-example1.txt")) {
+            day01.Solution solution = new day01.SolutionImpl();
+            assertEquals(45000, solution.solvePart2(input));
+        }
+    }
+    
+    @Test
     public void day_01_part2() throws Exception {
         try (InputStream input = AdventOfCode2022.class.getResourceAsStream("day01.txt")) {
             day01.Solution solution = new day01.SolutionImpl();
-            assertEquals((Object) null, solution.solvePart2(input));
+            assertEquals(213089, solution.solvePart2(input));
         }
     }
 

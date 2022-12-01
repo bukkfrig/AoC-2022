@@ -20,7 +20,11 @@ public final class SolutionImpl implements day01.Solution {
 
     @Override
     public Object solvePart2(InputStream input) throws Exception {
-        throw new UnsupportedOperationException("What will the puzzle be?");
+        return parseElves(input).stream() //
+                .sorted(Comparator.comparing(Elf::caloriesInFoodstuffs).reversed()) //
+                .limit(3) //
+                .mapToInt(Elf::caloriesInFoodstuffs) //
+                .sum();
     }
 
     static List<Elf> parseElves(InputStream input) throws IOException {
@@ -33,7 +37,7 @@ public final class SolutionImpl implements day01.Solution {
         }
         return elves;
     }
-    
+
     static Elf parseElf(Iterator<String> input) {
         List<Foodstuff> foodstuffs = new LinkedList<>();
         while (input.hasNext()) {
