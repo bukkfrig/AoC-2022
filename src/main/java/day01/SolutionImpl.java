@@ -8,22 +8,26 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class SolutionImpl implements day01.Solution {
     @Override
     public Object solvePart1(InputStream input) throws Exception {
-        Elf top = parseElves(input).stream() // .
+        Elf topByCalories = parseElves(input).stream() // .
                 .max(Comparator.comparing(SolutionImpl::caloriesInFoodstuffs)) //
                 .get();
 
-        return caloriesInFoodstuffs(top);
+        return caloriesInFoodstuffs(topByCalories);
     }
 
     @Override
     public Object solvePart2(InputStream input) throws Exception {
-        return parseElves(input).stream() //
+        List<Elf> topThreeByCalories = parseElves(input).stream() //
                 .sorted(Comparator.comparing(SolutionImpl::caloriesInFoodstuffs).reversed()) //
                 .limit(3) //
+                .collect(Collectors.toList());
+
+        return topThreeByCalories.stream() //
                 .mapToInt(SolutionImpl::caloriesInFoodstuffs) //
                 .sum();
     }
