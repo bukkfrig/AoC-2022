@@ -19,7 +19,14 @@ public final class SolutionImpl implements day02.Solution {
 
     @Override
     public Object solvePart2(InputStream input) throws Exception {
-        throw new UnsupportedOperationException("What will the puzzle be?");
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
+            StrategyGuide guide = new ActualStrategyGuide(reader.lines().toArray(String[]::new));
+            return IntStream.rangeClosed(1, guide.rounds()) //
+                    .mapToObj(guide::predict) //
+                    .mapToInt(score -> score[1]) //
+                    .sum();
+        }
+
     }
 
     static class RockPaperScissors {
@@ -75,15 +82,15 @@ public final class SolutionImpl implements day02.Solution {
             return new int[] { baseScore[0] + p1.points, baseScore[1] + p2.points };
         }
     }
-    
+
     static interface StrategyGuide {
         public int[] predict(int round);
-        
+
         public int rounds();
     }
 
     static class AssumedStrategyGuide implements StrategyGuide {
-        private final String[] rows;
+        final String[] rows;
 
         AssumedStrategyGuide(String[] rows) {
             this.rows = rows;
@@ -123,6 +130,56 @@ public final class SolutionImpl implements day02.Solution {
                 return RockPaperScissors.Throw.SCISSORS;
             }
             throw new IllegalArgumentException("Invalid encrypted value for Player 2: " + encrypted);
+        }
+    }
+
+    static class ActualStrategyGuide extends AssumedStrategyGuide {
+        ActualStrategyGuide(String[] rows) {
+            super(rows);
+        }
+
+        @Override
+        public int[] predict(int round) {
+            int rowIndex = round - 1;
+            String[] parts = rows[rowIndex].split("\\ ");
+            RockPaperScissors.Throw p1 = super.throwForPlayerOne(parts[0]);
+            RockPaperScissors.Throw p2 = throwForPlayerTwo(parts[1], p1);
+            return RockPaperScissors.score(p1, p2);
+        }
+
+        private static RockPaperScissors.Throw throwForPlayerTwo(String encrypted, RockPaperScissors.Throw other) {
+            if (encrypted.equals("X")) {
+                return toLoss(other);
+            } else if (encrypted.equals("Y")) {
+                return other;
+            } else if (encrypted.equals("Z")) {
+                return toWin(other);
+            }
+            throw new IllegalArgumentException("Invalid encrypted value for Player 2: " + encrypted);
+        }
+
+        private static RockPaperScissors.Throw toLoss(RockPaperScissors.Throw other) {
+            switch (other) {
+            case ROCK:
+                return RockPaperScissors.Throw.SCISSORS;
+            case PAPER:
+                return RockPaperScissors.Throw.ROCK;
+            case SCISSORS:
+                return RockPaperScissors.Throw.PAPER;
+            }
+            throw new IllegalArgumentException();
+        }
+
+        private static RockPaperScissors.Throw toWin(RockPaperScissors.Throw other) {
+            switch (other) {
+            case ROCK:
+                return RockPaperScissors.Throw.PAPER;
+            case PAPER:
+                return RockPaperScissors.Throw.SCISSORS;
+            case SCISSORS:
+                return RockPaperScissors.Throw.ROCK;
+            }
+            throw new IllegalArgumentException();
         }
     }
 }
