@@ -26,7 +26,6 @@ public final class SolutionImpl implements day02.Solution {
                     .mapToInt(score -> score[1]) //
                     .sum();
         }
-
     }
 
     static class RockPaperScissors {
@@ -90,7 +89,7 @@ public final class SolutionImpl implements day02.Solution {
     }
 
     static class AssumedStrategyGuide implements StrategyGuide {
-        final String[] rows;
+        protected final String[] rows;
 
         AssumedStrategyGuide(String[] rows) {
             this.rows = rows;
@@ -103,11 +102,21 @@ public final class SolutionImpl implements day02.Solution {
 
         @Override
         public int[] predict(int round) {
-            int rowIndex = round - 1;
-            String[] parts = rows[rowIndex].split("\\ ");
-            RockPaperScissors.Throw p1 = throwForPlayerOne(parts[0]);
-            RockPaperScissors.Throw p2 = throwForPlayerTwo(parts[1]);
+            RockPaperScissors.Throw p1 = throwForPlayerOne(round);
+            RockPaperScissors.Throw p2 = throwForPlayerTwo(round);
             return RockPaperScissors.score(p1, p2);
+        }
+        
+        protected RockPaperScissors.Throw throwForPlayerOne(int round) {
+            int rowIndex = round - 1;
+            String encrypted = rows[rowIndex].split("\\ ")[0];
+            return throwForPlayerOne(encrypted);
+        }
+        
+        protected RockPaperScissors.Throw throwForPlayerTwo(int round) {
+            int rowIndex = round - 1;
+            String encrypted = rows[rowIndex].split("\\ ")[1];
+            return throwForPlayerTwo(encrypted);
         }
 
         private static RockPaperScissors.Throw throwForPlayerOne(String encrypted) {
@@ -133,20 +142,19 @@ public final class SolutionImpl implements day02.Solution {
         }
     }
 
-    static class ActualStrategyGuide extends AssumedStrategyGuide {
+    static final class ActualStrategyGuide extends AssumedStrategyGuide {
         ActualStrategyGuide(String[] rows) {
             super(rows);
         }
 
         @Override
-        public int[] predict(int round) {
+        protected RockPaperScissors.Throw throwForPlayerTwo(int round) {
             int rowIndex = round - 1;
-            String[] parts = rows[rowIndex].split("\\ ");
-            RockPaperScissors.Throw p1 = super.throwForPlayerOne(parts[0]);
-            RockPaperScissors.Throw p2 = throwForPlayerTwo(parts[1], p1);
-            return RockPaperScissors.score(p1, p2);
+            String encrypted = rows[rowIndex].split("\\ ")[1];
+            RockPaperScissors.Throw p1 = throwForPlayerOne(round);
+            return throwForPlayerTwo(encrypted, p1);
         }
-
+        
         private static RockPaperScissors.Throw throwForPlayerTwo(String encrypted, RockPaperScissors.Throw other) {
             if (encrypted.equals("X")) {
                 return toLoss(other);
