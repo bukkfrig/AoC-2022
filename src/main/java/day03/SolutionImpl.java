@@ -67,10 +67,23 @@ class Rucksack {
 
     void validate() throws ItemInBothCompartmentsException {
         for (char c1 : firstCompartment.toCharArray()) {
-            if (secondCompartment.contains(Character.toString(c1))) {
+            if (contains(secondCompartment.toCharArray(), c1)) {
                 throw new ItemInBothCompartmentsException(c1);
             }
         }
+    }
+
+    char[] items() {
+        return (firstCompartment + secondCompartment).toCharArray();
+    }
+
+    static boolean contains(char[] haystack, char needle) {
+        for (char c : haystack) {
+            if (c == needle) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
@@ -86,9 +99,8 @@ class Group {
     }
 
     char badgeItem() {
-        for (char c1 : (first.firstCompartment + first.secondCompartment).toCharArray()) {
-            if ((second.firstCompartment + second.secondCompartment).contains(Character.toString(c1))
-                    && (third.firstCompartment + third.secondCompartment).contains(Character.toString(c1))) {
+        for (char c1 : first.items()) {
+            if (Rucksack.contains(second.items(), c1) && (Rucksack.contains(third.items(), c1))) {
                 return c1;
             }
         }
